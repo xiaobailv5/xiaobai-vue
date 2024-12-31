@@ -2,6 +2,12 @@
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
+
+
+
+//导入token状态
+import {useTokenStore} from '@/stores/token.js'
+
 //控制注册与登录表单的显示， 默认显示注册
 const isRegister = ref(false)
 //定义数据模型
@@ -38,7 +44,7 @@ const rules = {
 }
 
 //调用后台接口,完成注册
-import { userRegisterService} from '@/api/user.js'
+import { userRegisterService, userLoginService} from '@/api/user.js'
  const register = async () => {
     //registerData是一个响应式对象,如果要获取值,需要.value
     let result = await userRegisterService(registerData.value);
@@ -57,24 +63,24 @@ import { userRegisterService} from '@/api/user.js'
 //表单数据校验
 //登录函数
 //  import {useTokenStore} from '@/stores/token.js'
-// import {useRouter} from 'vue-router'
-// const router = useRouter()
-// const tokenStore = useTokenStore();
-// const login =async ()=>{
+import {useRouter} from 'vue-router'
+const router = useRouter()
+const tokenStore = useTokenStore();
+const login =async ()=>{
     //调用接口,完成登录
-//    let result =  await userLoginService(registerData.value);
+   let result =  await userLoginService(registerData.value);
    /* if(result.code===0){
     alert(result.msg? result.msg : '登录成功')
    }else{
     alert('登录失败')
    } */
    //alert(result.msg? result.msg : '登录成功')
-//    ElMessage.success(result.msg ? result.msg : '登录成功')
+   ElMessage.success(result.msg ? result.msg : '登录成功')
    //把得到的token存储到pinia中
-//    tokenStore.setToken(result.data)
+   tokenStore.setToken(result.data)
    //跳转到首页 路由完成跳转
-//    router.push('/')
-// }
+   router.push('/')
+}
 
 //定义函数,清空数据模型的数据
 const clearRegisterData = ()=>{
